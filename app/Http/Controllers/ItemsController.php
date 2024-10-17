@@ -13,6 +13,7 @@ class ItemsController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $lowStock = $request->input('low_stock', false);
         $sortBy = $request->get('sort_by', 'id');
         $sortDirection = $request->get('sort_direction', 'asc');
 
@@ -26,11 +27,14 @@ class ItemsController extends Controller
                         $query->where('name', 'like', '%' . $search . '%');
                     });
             })
+            ->when($lowStock, function ($query) {
+                return $query->where('quantity', '<', 10);
+            })
             ->orderBy($sortBy, $sortDirection)
             ->paginate(20)
-            ->appends(['search' => $search, 'sort_by' => $sortBy, 'sort_direction' => $sortDirection]);
+            ->appends(['search' => $search, 'sort_by' => $sortBy, 'sort_direction' => $sortDirection, 'low_stock' => $lowStock]);
 
-        return view('items.index', compact('items', 'search', 'sortBy', 'sortDirection'));
+        return view('items.index', compact('items', 'search', 'sortBy', 'sortDirection', 'lowStock'));
     }
 
     public function show(Item $item)
