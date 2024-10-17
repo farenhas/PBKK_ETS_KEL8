@@ -22,5 +22,6 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 
-Route::get('/items', [ItemsController::class, 'index'])->name('items.index');
+Route::resource('items', ItemsController::class);
+
 Route::get('/suppliers', [SuppliersController::class, 'index'])->name('suppliers.index');
