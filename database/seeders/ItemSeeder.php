@@ -19,7 +19,7 @@ class ItemSeeder extends Seeder
             return;
         }
 
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 200; $i++) {
             Item::factory()->create([
                 'supplier_id' => $suppliers->random()->id, 
                 'category_id' => $categories->random()->id,

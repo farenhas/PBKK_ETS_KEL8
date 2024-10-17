@@ -8,13 +8,23 @@ use App\Http\Controllers\Controller;
 
 class ItemsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Fetch paginated items (10 items per page)
-        $items = Item::with(['supplier', 'category'])->paginate(20);
+        $search = $request->input('search');
 
-        // Return the view with items
-        return view('items.index', compact('items'));
+        $items = Item::with(['supplier', 'category'])
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'like', '%' . $search . '%')
+                    ->orWhereHas('supplier', function ($query) use ($search) {
+                        $query->where('name', 'like', '%' . $search . '%');
+                    })
+                    ->orWhereHas('category', function ($query) use ($search) {
+                        $query->where('name', 'like', '%' . $search . '%');
+                    });
+            })
+            ->paginate(20);
+
+        return view('items.index', compact('items', 'search'));
     }
 
     public function show(Item $item)
@@ -24,10 +34,8 @@ class ItemsController extends Controller
 
     public function create()
     {
-        // Fetch all suppliers
         $suppliers = \App\Models\Supplier::all();
 
-        // Return the view to create a new item, with suppliers passed to the view
         return view('items.create', compact('suppliers'));
     }
 

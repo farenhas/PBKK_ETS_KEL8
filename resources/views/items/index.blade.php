@@ -9,16 +9,27 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <h3 class="text-lg font-semibold mb-4 flex justify-between items-center">
-                        List of Items
 
-                        <!-- Add Item Button -->
+                    <!-- Add Item Button and Search Form -->
+                    <div class="flex justify-between items-center mb-4">
                         <a href="{{ route('items.create') }}" 
                            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                            + Add Item
                         </a>
-                    </h3>
 
+                        <!-- Search Form -->
+                        <form action="{{ route('items.index') }}" method="GET" class="flex">
+                            <input type="text" name="search" value="{{ $search ?? '' }}" 
+                                   placeholder="Search items..." 
+                                   class="border-gray-300 rounded-l-md px-4 py-2">
+                            <button type="submit" 
+                                    class="bg-gray-600 text-white px-4 py-2 rounded-r-md hover:bg-gray-700">
+                                Search
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Success Message -->
                     @if (session('success'))
                         <div id="success-message" class="p-4 mb-4 bg-green-100 text-green-800 rounded relative">
                             {{ session('success') }}
@@ -29,6 +40,7 @@
                         </div>
                     @endif
 
+                    <!-- Items Table -->
                     <table class="min-w-full bg-white border border-gray-300">
                         <thead>
                             <tr>
@@ -78,6 +90,11 @@
                             @endforeach
                         </tbody>
                     </table>
+
+                    <!-- Pagination Links -->
+                    <div class="mt-4">
+                        {{ $items->links() }}
+                    </div>
                 </div>
             </div>
         </div>
