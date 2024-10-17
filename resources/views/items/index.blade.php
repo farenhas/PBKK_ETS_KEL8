@@ -1,9 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-80 dark:text-gray-200 leading-tight">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('List of Items') }}
         </h2>
-
     </x-slot>
 
     <div class="py-12">
@@ -11,7 +10,6 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
 
-                    <!-- Add Item Button -->
                     <div class="flex justify-between mb-6">
                         <form method="GET" action="{{ route('items.index') }}" class="flex">
                             <input type="text" name="search" value="{{ $search }}"
@@ -22,7 +20,6 @@
                             </button>
                         </form>
 
-                        <!-- Add button -->
                         <a href="{{ route('items.create') }}"
                             class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
                             + Add Item
@@ -39,58 +36,15 @@
                         </div>
                     @endif
 
-                    <!-- Items Table -->
                     <table class="min-w-full bg-white border border-gray-300">
                         <thead>
                             <tr>
-                                <th class="border px-4 py-2">
-                                    <a href="{{ route('items.index', ['sort_by' => 'id', 'sort_direction' => $sortBy === 'id' && $sortDirection === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}"
-                                        class="hover:underline">ID
-                                        @if ($sortBy === 'id')
-                                            {{ $sortDirection === 'asc' ? '↑' : '↓' }}
-                                        @endif
-                                    </a>
-                                </th>
-                                <th class="border px-4 py-2">
-                                    <a href="{{ route('items.index', ['sort_by' => 'name', 'sort_direction' => $sortBy === 'name' && $sortDirection === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}"
-                                        class="hover:underline">Name
-                                        @if ($sortBy === 'name')
-                                            {{ $sortDirection === 'asc' ? '↑' : '↓' }}
-                                        @endif
-                                    </a>
-                                </th>
-                                <th class="border px-4 py-2">
-                                    <a href="{{ route('items.index', ['sort_by' => 'quantity', 'sort_direction' => $sortBy === 'quantity' && $sortDirection === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}"
-                                        class="hover:underline">Quantity
-                                        @if ($sortBy === 'quantity')
-                                            {{ $sortDirection === 'asc' ? '↑' : '↓' }}
-                                        @endif
-                                    </a>
-                                </th>
-                                <th class="border px-4 py-2">
-                                    <a href="{{ route('items.index', ['sort_by' => 'price', 'sort_direction' => $sortBy === 'price' && $sortDirection === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}"
-                                        class="hover:underline">Price (USD)
-                                        @if ($sortBy === 'price')
-                                            {{ $sortDirection === 'asc' ? '↑' : '↓' }}
-                                        @endif
-                                    </a>
-                                </th>
-                                <th class="border px-4 py-2">
-                                    <a href="{{ route('items.index', ['sort_by' => 'supplier_id', 'sort_direction' => $sortBy === 'supplier_id' && $sortDirection === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}"
-                                        class="hover:underline">Supplier
-                                        @if ($sortBy === 'supplier_id')
-                                            {{ $sortDirection === 'asc' ? '↑' : '↓' }}
-                                        @endif
-                                    </a>
-                                </th>
-                                <th class="border px-4 py-2">
-                                    <a href="{{ route('items.index', ['sort_by' => 'category_id', 'sort_direction' => $sortBy === 'category_id' && $sortDirection === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}"
-                                        class="hover:underline">Category
-                                        @if ($sortBy === 'category_id')
-                                            {{ $sortDirection === 'asc' ? '↑' : '↓' }}
-                                        @endif
-                                    </a>
-                                </th>
+                                <th class="border px-4 py-2">ID</th>
+                                <th class="border px-4 py-2">Name</th>
+                                <th class="border px-4 py-2">Quantity</th>
+                                <th class="border px-4 py-2">Price (USD)</th>
+                                <th class="border px-4 py-2">Supplier</th>
+                                <th class="border px-4 py-2">Category</th>
                                 <th class="border px-4 py-2">Actions</th>
                             </tr>
                         </thead>
@@ -126,7 +80,6 @@
                         </tbody>
                     </table>
 
-                    <!-- Pagination Links -->
                     <div class="mt-4">
                         {{ $items->links() }}
                     </div>
