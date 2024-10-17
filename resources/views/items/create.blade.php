@@ -33,13 +33,26 @@
                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                             </div>
 
-                            <!-- Supplier (Optional) -->
+                            <!-- Supplier -->
                             <div>
                                 <label for="supplier_id" class="block text-sm font-medium text-gray-700">Supplier</label>
-                                <select name="supplier_id" id="supplier_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                <select name="supplier_id" id="supplier_id"
+                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                     <option value="">Select Supplier</option>
                                     @foreach ($suppliers as $supplier)
                                         <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Category -->
+                            <div>
+                                <label for="category_id" class="block text-sm font-medium text-gray-700">Category</label>
+                                <select name="category_id" id="category_id"
+                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                    <option value="">Select Category</option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
                                     @endforeach
                                 </select>
                             </div>

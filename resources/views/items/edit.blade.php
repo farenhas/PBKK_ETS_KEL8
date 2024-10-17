@@ -6,46 +6,73 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-md rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <form action="{{ route('items.update', $item->id) }}" method="POST">
                         @csrf
                         @method('PUT')
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Item Name -->
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700">Item Name</label>
+                                <input type="text" name="name" id="name" value="{{ old('name', $item->name) }}" required
+                                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            </div>
 
-                        <!-- Item Name -->
-                        <div class="mb-4">
-                            <label for="name" class="block text-gray-700 font-bold mb-2">Item Name:</label>
-                            <input type="text" name="name" id="name" value="{{ $item->name }}" 
-                                   class="w-full px-3 py-2 border rounded-lg text-gray-700">
+                            <!-- Quantity -->
+                            <div>
+                                <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
+                                <input type="number" name="quantity" id="quantity" value="{{ old('quantity', $item->quantity) }}" required
+                                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            </div>
+
+                            <!-- Price -->
+                            <div>
+                                <label for="price" class="block text-sm font-medium text-gray-700">Price (USD)</label>
+                                <input type="number" name="price" id="price" value="{{ old('price', $item->price) }}" step="0.01" required
+                                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            </div>
+
+                            <!-- Supplier -->
+                            <div>
+                                <label for="supplier_id" class="block text-sm font-medium text-gray-700">Supplier</label>
+                                <select name="supplier_id" id="supplier_id"
+                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                    <option value="">Select Supplier</option>
+                                    @foreach ($suppliers as $supplier)
+                                        <option value="{{ $supplier->id }}" {{ $supplier->id == $item->supplier_id ? 'selected' : '' }}>
+                                            {{ $supplier->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Category -->
+                            <div>
+                                <label for="category_id" class="block text-sm font-medium text-gray-700">Category</label>
+                                <select name="category_id" id="category_id"
+                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                    <option value="">Select Category</option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}" {{ $category->id == $item->category_id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
 
-                        <!-- Quantity -->
-                        <div class="mb-4">
-                            <label for="quantity" class="block text-gray-700 font-bold mb-2">Quantity:</label>
-                            <input type="number" name="quantity" id="quantity" value="{{ $item->quantity }}" 
-                                   class="w-full px-3 py-2 border rounded-lg text-gray-700">
-                        </div>
-
-                        <!-- Price -->
-                        <div class="mb-4">
-                            <label for="price" class="block text-gray-700 font-bold mb-2">Price (USD):</label>
-                            <input type="text" name="price" id="price" value="{{ $item->price }}" 
-                                   class="w-full px-3 py-2 border rounded-lg text-gray-700">
-                        </div>
-
-                        <!-- Buttons Section -->
-                        <div class="mt-6 flex justify-between items-center">
-                            <!-- Back Button (Left) -->
-                            <a href="{{ route('items.index') }}" 
-                               class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-                                ← Back to Items List
+                        <div class="mt-6 flex justify-between">
+                            <!-- Cancel Button -->
+                            <a href="{{ route('items.index') }}"
+                               class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded">
+                                Cancel
                             </a>
 
-                            <!-- Save Button (Right) -->
-                            <button type="submit" 
-                                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto">
-                                Save
+                            <!-- Submit Button -->
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
+                                Update Item
                             </button>
                         </div>
                     </form>

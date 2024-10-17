@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\Category;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -11,6 +13,8 @@ class ItemsController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search');
+        $sortBy = $request->get('sort_by', 'id');
+        $sortDirection = $request->get('sort_direction', 'asc');
 
         $items = Item::with(['supplier', 'category'])
             ->when($search, function ($query, $search) {
@@ -22,9 +26,11 @@ class ItemsController extends Controller
                         $query->where('name', 'like', '%' . $search . '%');
                     });
             })
-            ->paginate(20);
+            ->orderBy($sortBy, $sortDirection)
+            ->paginate(20)
+            ->appends(['search' => $search, 'sort_by' => $sortBy, 'sort_direction' => $sortDirection]);
 
-        return view('items.index', compact('items', 'search'));
+        return view('items.index', compact('items', 'search', 'sortBy', 'sortDirection'));
     }
 
     public function show(Item $item)
@@ -34,14 +40,33 @@ class ItemsController extends Controller
 
     public function create()
     {
-        $suppliers = \App\Models\Supplier::all();
+        $suppliers = Supplier::all();
+        $categories = Category::all();
 
-        return view('items.create', compact('suppliers'));
+        return view('items.create', compact('suppliers', 'categories'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'quantity' => 'required|integer',
+            'price' => 'required|numeric',
+            'supplier_id' => 'nullable|exists:suppliers,id',
+            'category_id' => 'nullable|exists:categories,id',
+        ]);
+
+        Item::create($request->all());
+
+        return redirect()->route('items.index')->with('success', 'Item added successfully');
     }
 
     public function edit(Item $item)
     {
-        return view('items.edit', compact('item'));
+        $suppliers = Supplier::all();
+        $categories = Category::all();
+
+        return view('items.edit', compact('item', 'suppliers', 'categories'));
     }
 
     public function update(Request $request, Item $item)

@@ -1,8 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Items') }}
+        <h2 class="font-semibold text-xl text-gray-80 dark:text-gray-200 leading-tight">
+            {{ __('List of Items') }}
         </h2>
+
     </x-slot>
 
     <div class="py-12">
@@ -10,26 +11,24 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
 
-                    <!-- Add Item Button and Search Form -->
-                    <div class="flex justify-between items-center mb-4">
-                        <a href="{{ route('items.create') }}" 
-                           class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                           + Add Item
-                        </a>
-
-                        <!-- Search Form -->
-                        <form action="{{ route('items.index') }}" method="GET" class="flex">
-                            <input type="text" name="search" value="{{ $search ?? '' }}" 
-                                   placeholder="Search items..." 
-                                   class="border-gray-300 rounded-l-md px-4 py-2">
-                            <button type="submit" 
-                                    class="bg-gray-600 text-white px-4 py-2 rounded-r-md hover:bg-gray-700">
+                    <!-- Add Item Button -->
+                    <div class="flex justify-between mb-6">
+                        <form method="GET" action="{{ route('items.index') }}" class="flex">
+                            <input type="text" name="search" value="{{ $search }}"
+                                placeholder="Search items..." class="border border-gray-300 rounded-md p-2 mr-2 w-full">
+                            <button type="submit"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                 Search
                             </button>
                         </form>
+
+                        <!-- Add button -->
+                        <a href="{{ route('items.create') }}"
+                            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                            + Add Item
+                        </a>
                     </div>
 
-                    <!-- Success Message -->
                     @if (session('success'))
                         <div id="success-message" class="p-4 mb-4 bg-green-100 text-green-800 rounded relative">
                             {{ session('success') }}
@@ -44,12 +43,54 @@
                     <table class="min-w-full bg-white border border-gray-300">
                         <thead>
                             <tr>
-                                <th class="border px-4 py-2">ID</th>
-                                <th class="border px-4 py-2">Name</th>
-                                <th class="border px-4 py-2">Quantity</th>
-                                <th class="border px-4 py-2">Price (USD)</th>
-                                <th class="border px-4 py-2">Supplier</th>
-                                <th class="border px-4 py-2">Category</th>
+                                <th class="border px-4 py-2">
+                                    <a href="{{ route('items.index', ['sort_by' => 'id', 'sort_direction' => $sortBy === 'id' && $sortDirection === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}"
+                                        class="hover:underline">ID
+                                        @if ($sortBy === 'id')
+                                            {{ $sortDirection === 'asc' ? '↑' : '↓' }}
+                                        @endif
+                                    </a>
+                                </th>
+                                <th class="border px-4 py-2">
+                                    <a href="{{ route('items.index', ['sort_by' => 'name', 'sort_direction' => $sortBy === 'name' && $sortDirection === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}"
+                                        class="hover:underline">Name
+                                        @if ($sortBy === 'name')
+                                            {{ $sortDirection === 'asc' ? '↑' : '↓' }}
+                                        @endif
+                                    </a>
+                                </th>
+                                <th class="border px-4 py-2">
+                                    <a href="{{ route('items.index', ['sort_by' => 'quantity', 'sort_direction' => $sortBy === 'quantity' && $sortDirection === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}"
+                                        class="hover:underline">Quantity
+                                        @if ($sortBy === 'quantity')
+                                            {{ $sortDirection === 'asc' ? '↑' : '↓' }}
+                                        @endif
+                                    </a>
+                                </th>
+                                <th class="border px-4 py-2">
+                                    <a href="{{ route('items.index', ['sort_by' => 'price', 'sort_direction' => $sortBy === 'price' && $sortDirection === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}"
+                                        class="hover:underline">Price (USD)
+                                        @if ($sortBy === 'price')
+                                            {{ $sortDirection === 'asc' ? '↑' : '↓' }}
+                                        @endif
+                                    </a>
+                                </th>
+                                <th class="border px-4 py-2">
+                                    <a href="{{ route('items.index', ['sort_by' => 'supplier_id', 'sort_direction' => $sortBy === 'supplier_id' && $sortDirection === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}"
+                                        class="hover:underline">Supplier
+                                        @if ($sortBy === 'supplier_id')
+                                            {{ $sortDirection === 'asc' ? '↑' : '↓' }}
+                                        @endif
+                                    </a>
+                                </th>
+                                <th class="border px-4 py-2">
+                                    <a href="{{ route('items.index', ['sort_by' => 'category_id', 'sort_direction' => $sortBy === 'category_id' && $sortDirection === 'asc' ? 'desc' : 'asc', 'search' => $search]) }}"
+                                        class="hover:underline">Category
+                                        @if ($sortBy === 'category_id')
+                                            {{ $sortDirection === 'asc' ? '↑' : '↓' }}
+                                        @endif
+                                    </a>
+                                </th>
                                 <th class="border px-4 py-2">Actions</th>
                             </tr>
                         </thead>
@@ -57,25 +98,19 @@
                             @foreach ($items as $item)
                                 <tr>
                                     <td class="border px-4 py-2">{{ $item->id }}</td>
-
-                                    <!-- Make the item name clickable -->
                                     <td class="border px-4 py-2">
                                         <a href="{{ route('items.show', $item->id) }}"
                                             class="text-blue-600 hover:underline">
                                             {{ $item->name }}
                                         </a>
                                     </td>
-
                                     <td class="border px-4 py-2">{{ $item->quantity }}</td>
                                     <td class="border px-4 py-2">{{ $item->price }} USD</td>
                                     <td class="border px-4 py-2">{{ $item->supplier->name ?? 'N/A' }}</td>
                                     <td class="border px-4 py-2">{{ $item->category->name ?? 'N/A' }}</td>
                                     <td class="border px-4 py-2">
-                                        <!-- Edit Button -->
                                         <a href="{{ route('items.edit', $item->id) }}"
                                             class="text-indigo-600 mr-2">Edit</a>
-
-                                        <!-- Delete Button -->
                                         <form action="{{ route('items.destroy', $item->id) }}" method="POST"
                                             class="inline-block">
                                             @csrf
@@ -95,6 +130,7 @@
                     <div class="mt-4">
                         {{ $items->links() }}
                     </div>
+
                 </div>
             </div>
         </div>
